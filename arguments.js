@@ -5,7 +5,7 @@ const m = module.exports = {};
 
 const parser = new ArgumentParser({
   version: '0.0.1',
-  addHelp:true,
+  addHelp: true,
   description: 'Command line utility for watching and pulling changes in particular branch of repository.\n\nSee http://github.com/ffluffyhedgehog/node-git-watcher'
 });
 /*parser.addArgument(
@@ -58,4 +58,5 @@ if (!args.time) {
 	args.time = '10';
 }
 
-m.args = () => args;
+m.args = args;
+m.parser = parser;
