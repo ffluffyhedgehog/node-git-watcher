@@ -20,5 +20,8 @@
     "argparse": "^1.0.9",
     "shelljs": "^0.8.1",
     "simple-git": "^1.89.0"
+  },
+  "bin": {
+    "git-watcher": "./index.js"
   }
 }
