@@ -29,33 +29,36 @@ parser.addArgument(
 parser.addArgument(
   [ '-t', '--time' ],
   {
-    help: 'Specifies how frequently check for changes, in minutes. -t 10 (once every ten minutes) is default.'
+    help: 'Specifies how frequently check for changes, in minutes. -t 10 (once\
+     every ten minutes) is default.'
   }
 );
 parser.addArgument(
   [ '-sB', '--script-before' ],
   {
-    help: 'Specifies command to execute before pulling. Will be executed in specified path.',
+    help: 'Specifies command to execute before pulling. Will be executed in\
+     specified path.',
     required: false,
   }
 );
 parser.addArgument(
   [ '-sA', '--script-after' ],
   {
-    help: 'Specifies command to execute after pulling. Will be executed in specified path.',
+    help: 'Specifies command to execute after pulling. Will be executed in\
+     specified path.',
     required: false,
   }
 );
 const args = parser.parseArgs();
 
 if (!args.path) {
-	args.path = './';
+  args.path = './';
 }
 if (!args.branch) {
-	args.branch = 'master';
+  args.branch = 'master';
 }
 if (!args.time) {
-	args.time = '10';
+  args.time = '10';
 }
 
 m.args = args;
