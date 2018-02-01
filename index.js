@@ -11,7 +11,7 @@ const repo = git(args.path);
 
 function watcher() {
 	setTimeout(() => {
-		
+
 	}, 0);
 }
 
