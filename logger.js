@@ -7,7 +7,7 @@ m.logger = () => {
 		_log: '',
 		log: function(...args) {
 			args.forEach((el) => {
-				this._log += el;
+				this._log += el + '\n';
 			});
 		},
 		error: function(...args) {
@@ -31,7 +31,7 @@ m.logger = () => {
 		}
 	}
 	process.on('exit', code => {
-		log.error('\nProcess exiting with code: ' + code);
+		log.error('Process exiting with code: ' + code);
 		log.release();
 	});
 	return log;
