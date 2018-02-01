@@ -3,7 +3,7 @@
 const shell = require('shelljs');
 const git = require('simple-git');
 const args = require('./arguments.js').args();
-
+const logger = require('./logger.js').logger();
 // console.log(args)
 shell.cd(args.path);
 // console.log(shell.exec(args.script_before));
@@ -22,7 +22,7 @@ repo.checkIsRepo((err, isRepo) => {
 		watcher();
 		setInterval(watcher, args.time*60000);
 	} else {
-		console.log(args.path + ' is not a git repository');
+		logger.error(args.path + ' is not a git repository');
 		process.exit(1);
 	}
 })

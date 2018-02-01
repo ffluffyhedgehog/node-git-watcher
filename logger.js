@@ -3,7 +3,7 @@
 const m = module.exports = {};
 
 m.logger = () => {
-	return {
+	const log = {
 		_log: '',
 		log: function(...args) {
 			args.forEach((el) => {
@@ -30,7 +30,14 @@ m.logger = () => {
 			this._log = '';
 		}
 	}
+	process.on('exit', code => {
+		log.error('\nProcess exiting with code: ' + code);
+		log.release();
+	});
+	return log;
 }
+
+
 
 /*const aaa = m.logger();
 
