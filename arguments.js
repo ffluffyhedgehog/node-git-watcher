@@ -34,6 +34,18 @@ parser.addArgument(
   }
 );
 parser.addArgument(
+  [ '-u', '--user' ],
+  {
+    help: 'Username for plaintext authentication, use with -pS or --password'
+  }
+);
+parser.addArgument(
+  [ '-pS', '--password' ],
+  {
+    help: 'Password for plaintext authentication, use with -u or --user'
+  }
+);
+parser.addArgument(
   [ '-sB', '--script-before' ],
   {
     help: 'Specifies command to execute before pulling. Will be executed in\

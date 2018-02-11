@@ -9,23 +9,27 @@ m.logger = () => {
       args.forEach((el) => {
         this._log += el + '\n';
       });
+      return this;
     },
     error(...args) {
       this._log += '\x1b[1m\x1b[31m';
       this.log(...args);
       this._log += '\x1b[0m';
+      return this;
     },
     warn(...args) {
       this._log += '\x1b[1m\x1b[33m';
       this.log(...args);
       this._log += '\x1b[0m';
+      return this;
     },
     important(...args) {
       this._log += '\x1b[1m';
       this.log(...args);
       this._log += '\x1b[0m';
+      return this;
     },
-    release() {
+    flush() {
       console.log(this._log);
       this._log = '';
     }

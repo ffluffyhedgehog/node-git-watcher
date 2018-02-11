@@ -8,8 +8,9 @@ const argsparser = require('./arguments').parser;
 const logger = require('./logger').logger();
 
 const runPreUpdate = () => new Promise((resolve, reject) => {
-  // TODO: Pipe stdout and stderr to logger
-  const runResult = shell.exec(path.resolve(__dirname, args.script_before));
+  const runResult = shell.exec(path.resolve(__dirname, args.script_before),
+    { silent: true });
+  logger.log(runResult.stdout).error(runResult.stderr).flush();
   if (runResult.code === 0) {
     console.log('Pre-update script executed');
     return resolve();
@@ -20,8 +21,9 @@ const runPreUpdate = () => new Promise((resolve, reject) => {
 });
 
 const runPostUpdate = () => new Promise((resolve, reject) => {
-  // TODO: Pipe stdout and stderr to logger
-  const runResult = shell.exec(path.resolve(__dirname, args.script_after));
+  const runResult = shell.exec(path.resolve(__dirname, args.script_after),
+    { silent: true });
+  logger.log(runResult.stdout).error(runResult.stderr).flush();
   if (runResult.code === 0) {
     console.log('Post-update script executed');
     return resolve();
@@ -43,34 +45,58 @@ const checkout = (repo) => new Promise((resolve, reject) => {
     .catch((err) => reject(err));
 });
 
+// Check if there is difference between local and remote
+// branch resolves with boolean
+const checkChanges = (repo, branch) => new Promise((resolve, reject) => {
+  const localPromise = repo.getBranchCommit(branch);
+  const remotePromise = repo.getBranchCommit(`origin/${branch}`);
+
+  Promise.all([localPromise, remotePromise])
+    .then(commits => {
+      if (commits[0].id().toString() === commits[1].id().toString()) {
+        resolve(false);
+      }
+      resolve(true);
+    })
+    .catch(err => reject(err));
+});
+
 const fetchAndUpdate = (repo) => {
   repo.fetchAll({
     callbacks: {
       credentials: (url, userName) => {
-        // TODO: Pass credentials
-        console.log('Credentials required');
-        return git.Cred.sshKeyFromAgent(userName);
+        // TODO: Add SSH key support
+        // TODO: Fix endless loop on wrong credentials usage
+        if (!args.user || !args.password) {
+          console.log('Credentials required');
+          return null;
+        }
+        return git.Cred.userpassPlaintextNew(args.user, args.password);
       },
       certificateCheck: () => 1
     }
   })
     .then(() =>
-    // Execute pre-update script
-      runPreUpdate()
+      checkChanges(repo, args.branch)
     )
-    .then(() =>
-    // Fetch done, merge branches
-      repo.mergeBranches(args.branch, `origin/${args.branch}`)
-    )
-    .then(() =>
-    // Branches merged, switch branch if neccessary and run post-update
-    // script
-      checkout(repo)
-        .then(() => runPostUpdate())
-    )
-    .then(() => {
-    // Update successfull
-      console.log('Updated');
+    .then((runUpdate) => {
+      if (runUpdate) {
+        // Execute pre-update script
+        return runPreUpdate()
+          .then(() => repo.mergeBranches(args.branch, `origin/${args.branch}`))
+          .then(() =>
+            // Branches merged, switch branch if neccessary and run post-update
+            // script
+            checkout(repo)
+              .then(() => runPostUpdate())
+          )
+          .then(() => {
+            // Update successfull
+            console.log('Updated');
+          });
+      } else {
+        console.log('No updates');
+      }
     })
     .catch((err) => console.log(err.message));
 };
