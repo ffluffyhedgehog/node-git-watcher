@@ -61,17 +61,20 @@ const checkChanges = (repo, branch) => new Promise((resolve, reject) => {
     .catch(err => reject(err));
 });
 
+let attempts = 0;
+
 const fetchAndUpdate = (repo) => {
   repo.fetchAll({
     callbacks: {
       credentials: (url, userName) => {
-        // TODO: Add SSH key support
-        // TODO: Fix endless loop on wrong credentials usage
         if (!args.user || !args.password) {
-          console.log('Credentials required');
-          return null;
+          return git.Cred.sshKeyFromAgent(userName);
         }
-        return git.Cred.userpassPlaintextNew(args.user, args.password);
+        if (attempts < 3) {
+          attempts++;
+          return git.Cred.userpassPlaintextNew(args.user, args.password);
+        }
+        return new Error('Wrong credentials');
       },
       certificateCheck: () => 1
     }
@@ -98,7 +101,7 @@ const fetchAndUpdate = (repo) => {
         console.log('No updates');
       }
     })
-    .catch((err) => console.log(err.message));
+    .catch((err) => console.log(err));
 };
 
 const watcher = (repo, interval) => {
