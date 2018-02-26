@@ -11,9 +11,10 @@ const logger = require('./lib/logger').logger();
 const config = configFactory.cookConfig();
 let application = {};
 
+console.log(config);
 if (config.mode === 'standalone') {
   application = standalone.createApplication(config);
-} else if (config.mode === 'center-controlled') {
+} else if (config.mode === 'centered') {
   application = centered.createApplication(config);
 }
 console.log(application);
