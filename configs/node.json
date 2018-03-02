@@ -1,0 +1,5 @@
+{
+	"build": "npm i",
+	"test": "npm test",
+	"run": "npm start"
+}
