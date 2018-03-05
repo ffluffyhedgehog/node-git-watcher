@@ -1,12 +1,7 @@
 #!/usr/bin/env node
 'use strict';
-const shell = require('shelljs');
-const path = require('path');
-const git = require('nodegit');
 const configFactory = require('./lib/configFactory');
 const standalone = require('./lib/standalone');
-const argsparser = require('./lib/arguments').parser;
-const logger = require('./lib/logger').logger();
 
 const config = configFactory.cookConfig();
 let application = {};
