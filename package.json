@@ -18,8 +18,9 @@
   "homepage": "https://github.com/ffluffyhedgehog/node-git-watcher#readme",
   "dependencies": {
     "argparse": "^1.0.9",
-    "nodegit": "^0.20.3",
     "localtunnel": "^1.8.3",
+    "metarhia-jstp": "^1.1.0",
+    "nodegit": "^0.20.3",
     "shelljs": "^0.8.1",
     "simple-git": "^1.89.0"
   },

@@ -2,6 +2,7 @@
 'use strict';
 const configFactory = require('./lib/configFactory');
 const standalone = require('./lib/standalone');
+const centered = require('./lib/centered');
 
 const config = configFactory.cookConfig();
 let application = {};
