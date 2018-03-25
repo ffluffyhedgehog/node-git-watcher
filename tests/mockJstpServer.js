@@ -4,7 +4,7 @@ const jstp = require('metarhia-jstp');
 
 let localNodeProxy = null;
 
-const app = new jstp.Application('rpc', {
+const app = new jstp.Application('serverRPC', {
   serverService: {
     sayHi(connection, name, callback) {
       callback(null, `Hi, ${name}, I am server!`);
@@ -21,12 +21,20 @@ const app = new jstp.Application('rpc', {
       });
     },
   },
+}, {
+  serverService: {
+    someEvent(connection, data) {
+      console.log('received event from client:');
+      console.log(data);
+    },
+  },
 });
 
 const auth = {
   authenticate: (connection, application, strategy, credentials, cb) => {
     console.log('Auth credentials: ', credentials);
     console.log('Strategy: ', strategy);
+    console.log(connection.client);
     if (credentials[0] !== 'vasya') {
       return cb(new Error('User not allowed'));
     }
