@@ -35,7 +35,7 @@ const auth = {
     console.log('Auth credentials: ', credentials);
     console.log('Strategy: ', strategy);
     console.log(connection.client);
-    if (credentials[0] !== 'vasya') {
+    if (credentials[0] !== 'test') {
       return cb(new Error('User not allowed'));
     }
     return cb(null, credentials[0]);
